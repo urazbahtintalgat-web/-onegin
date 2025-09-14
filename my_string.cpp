@@ -191,42 +191,53 @@ char *my_strdup(const char *s) {
 *@brief Эта функция считывает строку из файла до первого \н или до конца файла с конечным \0
 */
 ssize_t my_getline(char** lineptr, size_t* n, FILE* stream) {
-    if (!lineptr || !n || !stream) return -1;
+    if (!lineptr || !n || !stream) {
+        return -1;
+    }
 
-    size_t size = 32;
-    if (*lineptr) {
-        assert(*n != 0);
-        size = *n;
+    size_t size = *n;
+    if (*lineptr == NULL || size == 0) {
+        size = 32;
+        char *new_ptr = (char*) realloc(*lineptr, size);
+        if (new_ptr == NULL) {
+            return -1;
+        }
+        *lineptr = new_ptr;
+        *n = size;
     }
 
     ssize_t i = 0;
-    if (!*lineptr) {
-        *lineptr = (char *) calloc(size, sizeof(char));
-    }
+    int ch;
 
-    char ch = 0;
-    char *shit = NULL;
-    while ((ch = getc(stream)) != '\n' && ch != EOF) {
-        if (i == size - 1){
+    while ((ch = getc(stream)) != EOF) {
+        if (i >= (ssize_t)(size - 1)) {
             size *= 2;
-            shit = (char *) realloc(*lineptr, size);
-            if (shit == NULL) {
-                free(*lineptr);
+            char *new_ptr = (char *) realloc(*lineptr, size);
+            if (new_ptr == NULL) {
+                if (*lineptr && i > 0) {
+                    (*lineptr)[i] = '\0';
+                }
                 return -1;
             }
-            *lineptr = shit;
+            *lineptr = new_ptr;
+            *n = size;
         }
-        *(*lineptr + i) = ch;
-        i++;
+
+        (*lineptr)[i++] = (char)ch;
+
+        if (ch == '\n') {
+            break;
+        }
     }
-    if (i == 0) {
+
+    if (i == 0 && ch == EOF) {
         return -1;
     }
-    if (ch == '\n'){
-        *(*lineptr + i) = '\n';
-        i++;
+
+    if (*lineptr) {
+        (*lineptr)[i] = '\0';
     }
-    *(*lineptr + i) = '\0';
+
     return i;
 }
 
