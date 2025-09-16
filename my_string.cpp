@@ -277,3 +277,86 @@ const char * my_strstr(const char * string1, const char * string2) {
 //    int numberof0 = 0;
 //    while (numberof0 < n || my_string[i] != '\0') {
 //
+
+/**
+ * @brief Эта функция считывает строку из файла до первого символа разделителя:
+ *        ('\n', ' ', ',', '.', '?', '!', '(', ')', ';', '_')
+ * 
+ * @return Количество считанных символов учитывая разделитель но заменяя его на \0
+ */
+ssize_t my_getword(char** lineptr, size_t* n, FILE* stream) {
+    if (!lineptr || !n || !stream) {
+        return -1;
+    }
+
+    size_t size = *n;
+    if (*lineptr == NULL || size == 0) {
+        size = 8;
+        char *new_ptr = (char*) realloc(*lineptr, size);
+        if (new_ptr == NULL) {
+            return -1;
+        }
+        *lineptr = new_ptr;
+        *n = size;
+    }
+
+    ssize_t i = 0;
+    int ch;
+
+    while ((ch = getc(stream)) != EOF) {
+        if (i >= (ssize_t)(size - 1)) {
+            size *= 2;
+            char *new_ptr = (char *) realloc(*lineptr, size);
+            if (new_ptr == NULL) {
+                if (*lineptr && i > 0) {
+                    (*lineptr)[i] = '\0';
+                }
+                return -1;
+            }
+            *lineptr = new_ptr;
+            *n = size;
+        }
+
+        (*lineptr)[i++] = (char)ch;
+
+        if (ch == '\n' || ch == ' ' || ch == ',' || ch == '.' || ch == '!' || ch == ';' || ch == '_'
+            || ch == '(' || ch == ')' || ch == '?') {
+            //i--;
+            break;
+        }
+    }
+
+    if (i == 0 && ch == EOF) {
+        return -1;
+    }
+
+    if (*lineptr) {
+        (*lineptr)[i - 1] = '\0';
+    }
+
+    return i;
+}
+
+int repstrcmp(char* str1, char* str2) {
+    int ind1 = 0, ind2 = 0;
+
+    while (str1[ind1] != '\0')
+        ind1++;
+    while (str2[ind2] != '\0')
+        ind2++;
+    
+    while (str1[ind1] == str2[ind2] && ind1 >= 0 && ind2 >= 0) {
+        ind1--;
+        ind2--;
+    }
+
+    if (ind1 == -1 && ind2 == -1) {
+        return 0;
+    } else if (ind1 == -1) {
+        return -1;
+    } else if (ind2 == -1) {
+        return 1;
+    } else {
+        return str1[ind1] - str2[ind2];
+    }
+}

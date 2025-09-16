@@ -3,6 +3,6 @@
 
 #include <stdio.h>
 
-int onegin_reader(FILE* text, char* mas[], int maxlen);
+int onegin_reader(FILE* text, char*** mas, int* maxlen);
 
 #endif //ONEGIN_READER.H

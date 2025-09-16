@@ -66,4 +66,7 @@ ssize_t my_getline(char** lineptr, size_t* n, FILE* stream);
 */
 const char * my_strstr(const char * string1, const char * string2);
 
+ssize_t my_getword(char** lineptr, size_t* n, FILE* stream);
+
+int repstrcmp(char* str1, char* str2)
 #endif //MY_STRING
