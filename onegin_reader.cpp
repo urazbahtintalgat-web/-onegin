@@ -6,6 +6,7 @@
 
 #include "my_string.h"
 
+
 int onegin_reader(FILE* text, char*** mas, int* maxlen) {
     printf("onegin reader started\n");
     char* buffer = NULL;

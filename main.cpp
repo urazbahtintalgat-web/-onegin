@@ -33,6 +33,7 @@ int main(){
 
     FILE* text = fopen("textonegin.txt", "r");
     FILE* res = fopen("result.txt", "w");
+    FILE* repres = fopen("represult.txt" , "w");
     //FILE* repres = fopen("represult.txt", "w");
     int n = onegin_reader(text, &mas, &MAXSTRINGS);
 
