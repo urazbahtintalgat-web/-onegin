@@ -301,7 +301,7 @@ ssize_t my_getword(char** lineptr, size_t* n, FILE* stream) {
     }
 
     ssize_t i = 0;
-    int ch;
+    int ch = 0;
 
     while ((ch = getc(stream)) != EOF) {
         if (i >= (ssize_t)(size - 1)) {
