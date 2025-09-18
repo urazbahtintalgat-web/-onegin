@@ -57,7 +57,7 @@ int main(){
         fputc('\n', fd);
     }
 
-    fprintf(fd, "\n\n\n");
+    //fprintf(fd, "\n\n\n");
 
     //сортировка с конца
     qsort(ptr_massiv, (size_t) line_amount, sizeof(struct line), reverse_compare_fumction_for_line);
@@ -67,7 +67,7 @@ int main(){
         fputc('\n', fd);
     }
     
-    fprintf(fd, "\n\n\n");
+    //fprintf(fd, "\n\n\n");
 
     //обычная запись
 
