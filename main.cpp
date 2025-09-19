@@ -37,11 +37,19 @@ int main(){
     size_t read = 0;
     char file_name[] = "textonegin.txt";
     char* massiv = readfile(file_name , &read);
+    if (massiv == NULL) {
+        printf("file was not opened\n");
+        return 1;
+    }
 
     int line_amount = count_lines(massiv);
     printf("%d\n", line_amount);
 
     struct line * lines = make_ptr_massive(massiv, line_amount);
+    if (lines == NULL) {
+        printf("memory was not allocated\n");
+        return 1;
+    }
 
     char* start = lines[0].begin;
     char* end = lines[line_amount-1].end;

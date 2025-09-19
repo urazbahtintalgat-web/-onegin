@@ -20,12 +20,20 @@ char* readfile(char* file_name, size_t *read) {
 
     struct stat text_stat;
     int n = stat(file_name, &text_stat);
+    if (n != 0) {
+        return NULL;
+    }
     long int size_text = text_stat.st_size;
 
     char* massiv = (char*) calloc(size_text + 1, sizeof(char));
-    assert(massiv);
+    if (massiv == NULL) {
+        return NULL;
+    }
 
     FILE* text = fopen(file_name, "r");
+    if (text == NULL) {
+        return NULL;
+    }
     assert(text);
 
     *read = fread(massiv, sizeof(char), size_text, text);
@@ -68,7 +76,9 @@ struct line* make_ptr_massive(char* line_massive, int line_amount) {
 
     struct line * lines;
     lines = (struct line *) calloc(line_amount, sizeof(struct line));
-    assert(lines);
+    if (lines == NULL) {
+        return NULL;
+    }
 
     int n = 0;
     lines[0].begin = line_massive;
