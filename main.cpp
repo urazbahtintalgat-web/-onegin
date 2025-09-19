@@ -41,29 +41,29 @@ int main(){
     int line_amount = count_lines(massiv);
     printf("%d\n", line_amount);
 
-    struct line * ptr_massiv = make_ptr_massive(massiv, line_amount);
+    struct line * lines = make_ptr_massive(massiv, line_amount);
 
-    char* start = ptr_massiv[0].begin;
-    char* end = ptr_massiv[line_amount-1].end;
+    char* start = lines[0].begin;
+    char* end = lines[line_amount-1].end;
 
     char result_file[] = "resultonegin.txt";
     FILE* fd = fopen(result_file, "w");
 
     //сортировка и запиьс по алфавиту
-    qsort(ptr_massiv, (size_t) line_amount, sizeof(struct line), compare_fumction_for_line);
+    qsort(lines, (size_t) line_amount, sizeof(struct line), compare_fumction_for_line);
 
     for (int i = 0; i < line_amount; i++) {
-        fwrite(ptr_massiv[i].begin, sizeof(char), (size_t) (ptr_massiv[i].end - ptr_massiv[i].begin + 1), fd);
+        fwrite(lines[i].begin, sizeof(char), (size_t) (lines[i].end - lines[i].begin + 1), fd);
         fputc('\n', fd);
     }
 
     //fprintf(fd, "\n\n\n");
 
     //сортировка с конца
-    qsort(ptr_massiv, (size_t) line_amount, sizeof(struct line), reverse_compare_fumction_for_line);
+    qsort(lines, (size_t) line_amount, sizeof(struct line), reverse_compare_fumction_for_line);
 
     for (int i = 0; i < line_amount; i++) {
-        fwrite(ptr_massiv[i].begin, sizeof(char), (size_t) (ptr_massiv[i].end - ptr_massiv[i].begin + 1), fd);
+        fwrite(lines[i].begin, sizeof(char), (size_t) (lines[i].end - lines[i].begin + 1), fd);
         fputc('\n', fd);
     }
     
@@ -71,7 +71,7 @@ int main(){
 
     //обычная запись
 
-    fwrite(start, sizeof(char), (size_t) (end - start + 1), fd);
+    fwrite(start, sizeof(char), (size_t) (end - start), fd);
 
     fclose(fd);
 

@@ -15,6 +15,9 @@
  * @return указатель на выделенную динамическую память в которую скопировался файл
  */
 char* readfile(char* file_name, size_t *read) {
+    assert(file_name);
+    assert(read);
+
     struct stat text_stat;
     int n = stat(file_name, &text_stat);
     long int size_text = text_stat.st_size;
@@ -26,6 +29,7 @@ char* readfile(char* file_name, size_t *read) {
     assert(text);
 
     *read = fread(massiv, sizeof(char), size_text, text);
+    assert(read);
     massiv[*read] = '\0';
     return massiv;
 }
@@ -59,28 +63,32 @@ int count_lines(const char* line_massive) {
  * @return указатель на выделенный динамически массив из структур
  */
 struct line* make_ptr_massive(char* line_massive, int line_amount) {
-    struct line * ptr_massiv;
-    ptr_massiv = (struct line *) calloc(line_amount, sizeof(struct line));
+    assert(line_massive);
+    assert(line_amount > 0);
+
+    struct line * lines;
+    lines = (struct line *) calloc(line_amount, sizeof(struct line));
+    assert(lines);
 
     int n = 0;
-    ptr_massiv[0].begin = line_massive;
+    lines[0].begin = line_massive;
 
     char* ind = line_massive;
     char* saved_ind = ind;
     while (ind = strchr(ind, '\n')) {
-        ptr_massiv[n].end = ind - 1;
+        lines[n].end = ind - 1;
         n++;
-        ptr_massiv[n].begin = ind + 1;
+        lines[n].begin = ind + 1;
         saved_ind = ind;
         ind++;
     }
     while (*saved_ind != '\0') {
         saved_ind++;
     }
-    ptr_massiv[n].end = saved_ind;
+    lines[n].end = saved_ind;
     assert(line_amount == n + 1);
 
-    return ptr_massiv;
+    return lines;
 }
 
 /**
@@ -160,11 +168,11 @@ int reverse_compare_fumction_for_line(const void * ptr1, const void *ptr2) {
 
     if (end1 < p1->begin && end2 < p2->begin) {
         return 0;
-    }else if (end1 < p1->begin) {
+    } else if (end1 < p1->begin) {
         return -1;
-    }else if (end2 < p2->begin) {
+    } else if (end2 < p2->begin) {
         return 1;
     }
 
-    return (unsigned char)tolower(*end1) - (unsigned char)tolower(*end2);
+    return tolower(*end1) - tolower(*end2);
 }
