@@ -6,6 +6,23 @@
 #include <assert.h>
 #include <ctype.h>
 
+
+/**
+ * @brief Эта функция возвращает размер файла в байтах
+ * 
+ * @param file_name имя файла размер которого надо определить
+ * 
+ * @return размер файла в байтах либо -1 если открыть файл не вышло
+ */
+long int get_file_length(char* file_name) {
+    struct stat text_stat;
+    int n = stat(file_name, &text_stat);
+    if (n != 0) {
+        return -1;
+    }
+    return text_stat.st_size;
+}
+
 /**
  * @brief Эта функция считывает весь текстовый файл
  * 
@@ -18,12 +35,10 @@ char* readfile(char* file_name, size_t *read) {
     assert(file_name);
     assert(read);
 
-    struct stat text_stat;
-    int n = stat(file_name, &text_stat);
-    if (n != 0) {
+    long int size_text = get_file_length(file_name);
+    if (size_text == -1) {
         return NULL;
     }
-    long int size_text = text_stat.st_size;
 
     char* massiv = (char*) calloc(size_text + 1, sizeof(char));
     if (massiv == NULL) {
