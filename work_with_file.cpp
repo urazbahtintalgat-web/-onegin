@@ -42,11 +42,13 @@ char* readfile(char* file_name, size_t *read) {
 
     char* massiv = (char*) calloc(size_text + 1, sizeof(char));
     if (massiv == NULL) {
+        free(massiv);
         return NULL;
     }
 
     FILE* text = fopen(file_name, "r");
     if (text == NULL) {
+        free(text);
         return NULL;
     }
     assert(text);
@@ -85,7 +87,7 @@ int count_lines(const char* line_massive) {
  * 
  * @return указатель на выделенный динамически массив из структур
  */
-struct line* make_ptr_massive(char* line_massive, int line_amount) {
+struct line* make_line_massive(char* line_massive, int line_amount) {
     assert(line_massive);
     assert(line_amount > 0);
 
@@ -100,6 +102,7 @@ struct line* make_ptr_massive(char* line_massive, int line_amount) {
 
     char* ind = line_massive;
     char* saved_ind = ind;
+    
     while (ind = strchr(ind, '\n')) {
         lines[n].end = ind - 1;
         n++;
@@ -114,6 +117,20 @@ struct line* make_ptr_massive(char* line_massive, int line_amount) {
     assert(line_amount == n + 1);
 
     return lines;
+}
+
+char* find_first_alpha(char* start_line, char* end_line) {
+    while (start_line <= end_line && !isalpha(*start_line)) {
+        start_line++;
+    }
+    return start_line;
+}
+
+char* find_last_alpha(char* start_line, char* end_line) {
+    while (end_line >= start_line && !isalpha(*end_line)) {
+        end_line--;
+    }
+    return end_line;
 }
 
 /**
@@ -135,12 +152,8 @@ int compare_fumction_for_line(const void * ptr1, const void *ptr2) {
     char* start1 = p1->begin;
     char* start2 = p2->begin;
 
-    while (start1 <= p1->end && !isalpha(*start1)) {
-        start1++;
-    }
-    while (start2 <= p2->end && !isalpha(*start2)) {
-        start2++;
-    }
+    start1 = find_first_alpha(p1->begin, p1->end);
+    start2 = find_first_alpha(p2->begin, p2->end);
 
     int has_letters1 = (start1 <= p1->end);
     int has_letters2 = (start2 <= p2->end);
@@ -168,6 +181,14 @@ int compare_fumction_for_line(const void * ptr1, const void *ptr2) {
     }
 }
 
+/**
+ * @brief функция сравнения с конца для line под стандарт qsort
+ * 
+ * @param ptr1 указатель на 1 line
+ * @param ptr2 указатель на 2 line
+ * 
+ * @return <0 если line1 < line2, 0 если line1 == line2, >0 если line1 > line2 (все это с конца)
+ */
 int reverse_compare_fumction_for_line(const void * ptr1, const void *ptr2) {
     assert(ptr1);
     assert(ptr2);
@@ -179,12 +200,8 @@ int reverse_compare_fumction_for_line(const void * ptr1, const void *ptr2) {
     char* end1 = p1->end;
     char* end2 = p2->end;
 
-    while (end1 >= p1->begin && !isalpha(*end1)) {
-        end1--;
-    }
-    while (end2 >= p2->begin && !isalpha(*end2)) {
-        end2--;
-    }
+    end1 = find_last_alpha(p1->begin, end1);
+    end2 = find_first_alpha(p2->begin, end2);
 
     while(end1 >= p1->begin && end2 >= p2->begin && tolower(*end1) == tolower(*end2)) {
         end1--;

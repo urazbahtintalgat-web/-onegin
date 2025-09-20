@@ -36,52 +36,52 @@ int sravnenie_rep(char* str1, char* str2);
 int main(){
     size_t read = 0;
     char file_name[] = "textonegin.txt";
-    char* massiv = readfile(file_name , &read);
-    if (massiv == NULL) {
+    char* raed_test_massiv = readfile(file_name , &read);
+    if (raed_test_massiv == NULL) {
         printf("file was not opened\n");
         return 1;
     }
 
-    int line_amount = count_lines(massiv);
+    int line_amount = count_lines(raed_test_massiv);
     printf("%d\n", line_amount);
 
-    struct line * lines = make_ptr_massive(massiv, line_amount);
+    struct line * lines = make_line_massive(raed_test_massiv, line_amount);
     if (lines == NULL) {
         printf("memory was not allocated\n");
         return 1;
     }
 
-    char* start = lines[0].begin;
-    char* end = lines[line_amount-1].end;
+    char* text_start_pointer = lines[0].begin;
+    char* text_end_pointer = lines[line_amount-1].end;
 
-    char result_file[] = "resultonegin.txt";
-    FILE* fd = fopen(result_file, "w");
+    char result_filename[] = "resultonegin.txt";
+    FILE* result_file_pointer = fopen(result_filename, "w");
 
     //сортировка и запиьс по алфавиту
     qsort(lines, (size_t) line_amount, sizeof(struct line), compare_fumction_for_line);
 
     for (int i = 0; i < line_amount; i++) {
-        fwrite(lines[i].begin, sizeof(char), (size_t) (lines[i].end - lines[i].begin + 1), fd);
-        fputc('\n', fd);
+        fwrite(lines[i].begin, sizeof(char), (size_t) (lines[i].end - lines[i].begin + 1), result_file_pointer);
+        fputc('\n', result_file_pointer);
     }
 
-    //fprintf(fd, "\n\n\n");
+    //fprintf(result_file_pointer, "\n\n\n");
 
     //сортировка с конца
     qsort(lines, (size_t) line_amount, sizeof(struct line), reverse_compare_fumction_for_line);
 
     for (int i = 0; i < line_amount; i++) {
-        fwrite(lines[i].begin, sizeof(char), (size_t) (lines[i].end - lines[i].begin + 1), fd);
-        fputc('\n', fd);
+        fwrite(lines[i].begin, sizeof(char), (size_t) (lines[i].end - lines[i].begin + 1), result_file_pointer);
+        fputc('\n', result_file_pointer);
     }
     
-    //fprintf(fd, "\n\n\n");
+    //fprintf(result_file_pointer, "\n\n\n");
 
     //обычная запись
 
-    fwrite(start, sizeof(char), (size_t) (end - start), fd);
+    fwrite(text_start_pointer, sizeof(char), (size_t) (text_end_pointer - text_start_pointer), result_file_pointer);
 
-    fclose(fd);
+    fclose(result_file_pointer);
 
     
     //
