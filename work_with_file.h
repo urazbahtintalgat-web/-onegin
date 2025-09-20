@@ -50,24 +50,5 @@ int count_lines(const char* line_massive);
  */
 struct line* make_line_massive(char* line_massive, int line_amount);
 
-/**
- * @brief функция сравнения для line под стандарт qsort
- * 
- * @param ptr1 указатель на 1 line
- * @param ptr2 указатель на 2 line
- * 
- * @return <0 если line1 < line2, 0 если line1 == line2, >0 если line1 > line2
- */
-int compare_fumction_for_line(const void * ptr1, const void *ptr2);
-
-/**
- * @brief функция сравнения с конца для line под стандарт qsort
- * 
- * @param ptr1 указатель на 1 line
- * @param ptr2 указатель на 2 line
- * 
- * @return <0 если line1 < line2, 0 если line1 == line2, >0 если line1 > line2 (все это с конца)
- */
-int reverse_compare_fumction_for_line(const void * ptr1, const void *ptr2);
 
 #endif //WORK_WITH_FILE_H

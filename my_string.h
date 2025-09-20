@@ -1,6 +1,18 @@
 #ifndef MY_STRING
 #define MY_STRING
 #include <stdio.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <ctype.h>
+
+/**
+ * @brief структура чтобы хранить начало и конец строки не включая \н и без \0
+ */
+struct line {
+    char* begin;
+    char* end;
+};
 
 /**
 * @brief Эта функция печатает строку с последующим \н
@@ -69,4 +81,38 @@ const char * my_strstr(const char * string1, const char * string2);
 ssize_t my_getword(char** lineptr, size_t* n, FILE* stream);
 
 int repstrcmp(char* str1, char* str2);
+
+char* find_first_alpha(char* start_line, char* end_line) {
+    while (start_line <= end_line && !isalpha(*start_line)) {
+        start_line++;
+    }
+    return start_line;
+}
+
+char* find_last_alpha(char* start_line, char* end_line) {
+    while (end_line >= start_line && !isalpha(*end_line)) {
+        end_line--;
+    }
+    return end_line;
+}
+
+/**
+ * @brief функция сравнения для line под стандарт qsort
+ * 
+ * @param ptr1 указатель на 1 line
+ * @param ptr2 указатель на 2 line
+ * 
+ * @return <0 если line1 < line2, 0 если line1 == line2, >0 если line1 > line2
+ */
+int compare_fumction_for_line(const void * ptr1, const void *ptr2);
+
+/**
+ * @brief функция сравнения с конца для line под стандарт qsort
+ * 
+ * @param ptr1 указатель на 1 line
+ * @param ptr2 указатель на 2 line
+ * 
+ * @return <0 если line1 < line2, 0 если line1 == line2, >0 если line1 > line2 (все это с конца)
+ */
+int reverse_compare_fumction_for_line(const void * ptr1, const void *ptr2);
 #endif //MY_STRING

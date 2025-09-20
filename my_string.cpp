@@ -268,15 +268,6 @@ const char * my_strstr(const char * string1, const char * string2) {
     }
     return NULL;
 }
-//char * strtok(char * string, const char * delim) {
-//    static int n = -1;
-//    n++;
-//    static char my_string[] = string;
-//    size_t len_delim = my_strlen(delim);
-//    size_t i = 0;
-//    int numberof0 = 0;
-//    while (numberof0 < n || my_string[i] != '\0') {
-//
 
 /**
  * @brief Эта функция считывает строку из файла до первого символа разделителя:
@@ -359,4 +350,104 @@ int repstrcmp(char* str1, char* str2) {
     } else {
         return str1[ind1] - str2[ind2];
     }
+}
+
+char* find_first_alpha(char* start_line, char* end_line) {
+    while (start_line <= end_line && !isalpha(*start_line)) {
+        start_line++;
+    }
+    return start_line;
+}
+
+char* find_last_alpha(char* start_line, char* end_line) {
+    while (end_line >= start_line && !isalpha(*end_line)) {
+        end_line--;
+    }
+    return end_line;
+}
+
+/**
+ * @brief функция сравнения для line под стандарт qsort
+ * 
+ * @param ptr1 указатель на 1 line
+ * @param ptr2 указатель на 2 line
+ * 
+ * @return <0 если line1 < line2, 0 если line1 == line2, >0 если line1 > line2
+ */
+int compare_fumction_for_line(const void * ptr1, const void *ptr2) {
+    assert(ptr1);
+    assert(ptr2);
+
+    struct line * p1 = (struct line *) ptr1;
+    struct line * p2 = (struct line *) ptr2;
+    assert(p1->begin && p1->end && p2->begin && p2->end);
+
+    char* start1 = p1->begin;
+    char* start2 = p2->begin;
+
+    start1 = find_first_alpha(p1->begin, p1->end);
+    start2 = find_first_alpha(p2->begin, p2->end);
+
+    int has_letters1 = (start1 <= p1->end);
+    int has_letters2 = (start2 <= p2->end);
+
+    if (!has_letters1 && !has_letters2) return 0;
+    if (!has_letters1) return -1;
+    if (!has_letters2) return 1;
+
+    size_t len1 = p1->end - start1 + 1;
+    size_t len2 = p2->end - start2 + 1;
+    size_t min_len = (len1 > len2) ? len2 : len1;
+    
+    int cmp = memcmp(start1, start2, min_len);
+
+    if (cmp != 0) {
+        return cmp;
+    }
+
+    if (len1 == len2) {
+        return 0;
+    } else if (len1 < len2) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
+
+/**
+ * @brief функция сравнения с конца для line под стандарт qsort
+ * 
+ * @param ptr1 указатель на 1 line
+ * @param ptr2 указатель на 2 line
+ * 
+ * @return <0 если line1 < line2, 0 если line1 == line2, >0 если line1 > line2 (все это с конца)
+ */
+int reverse_compare_fumction_for_line(const void * ptr1, const void *ptr2) {
+    assert(ptr1);
+    assert(ptr2);
+
+    struct line * p1 = (struct line *) ptr1;
+    struct line * p2 = (struct line *) ptr2;
+    assert(p1->begin && p1->end && p2->begin && p2->end);
+
+    char* end1 = p1->end;
+    char* end2 = p2->end;
+
+    end1 = find_last_alpha(p1->begin, end1);
+    end2 = find_first_alpha(p2->begin, end2);
+
+    while(end1 >= p1->begin && end2 >= p2->begin && tolower(*end1) == tolower(*end2)) {
+        end1--;
+        end2--;
+    }
+
+    if (end1 < p1->begin && end2 < p2->begin) {
+        return 0;
+    } else if (end1 < p1->begin) {
+        return -1;
+    } else if (end2 < p2->begin) {
+        return 1;
+    }
+
+    return tolower(*end1) - tolower(*end2);
 }

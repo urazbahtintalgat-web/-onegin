@@ -75,6 +75,7 @@ int main(){
         fputc('\n', result_file_pointer);
     }
     
+    free(lines);
     //fprintf(result_file_pointer, "\n\n\n");
 
     //обычная запись
