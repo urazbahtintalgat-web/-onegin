@@ -5,6 +5,18 @@
 #include <assert.h>
 #include <string.h>
 
+void swap(void * first, void * second, size_t size) {
+    char * a = (char *) first;
+    char * b = (char *) second;
+    while (size--) {
+        char buff = *a;
+        *a    = *b;
+        *b    = buff;
+        a++;
+        b++;
+    }
+}
+
 
 void buble_sort(void* first, size_t number, size_t size, int (* comparator) (const void *, const void *)) {
     assert(comparator);
@@ -12,8 +24,8 @@ void buble_sort(void* first, size_t number, size_t size, int (* comparator) (con
     assert(number >= 0);
     assert(size >= 1);
 
-    void * buff = malloc(size);
-    assert(buff);
+    //void * buff = malloc(size);
+    //assert(buff);
 
     char * buff_first = (char*) first;
 
@@ -25,12 +37,10 @@ void buble_sort(void* first, size_t number, size_t size, int (* comparator) (con
             void * next = buff_first + (j + 1) * size;
 
             if (comparator(now, next) > 0) {
-                memcpy(buff, now , size);
-                memcpy(now , next, size);
-                memcpy(next, buff, size);
+                swap(now, next, size);
             }
         }
     }
 
-    free(buff);
+    //free(buff);
 }

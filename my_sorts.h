@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+void swap(void * first, void * second);
+
 void buble_sort(void* first, size_t number, size_t size, int (* comparator) (const void *, const void *));
 
 #endif //MY_SORTS_H
