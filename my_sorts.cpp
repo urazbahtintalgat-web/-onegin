@@ -18,7 +18,7 @@ void swap(void * first, void * second, size_t size) {
 }
 
 
-void buble_sort(void* first, size_t number, size_t size, int (* comparator) (const void *, const void *)) {
+void buble_sort(void* first, size_t number, size_t size, camporator_type (* comparator) (const void *, const void *)) {
     assert(comparator);
     assert(first);
     assert(number >= 0);
